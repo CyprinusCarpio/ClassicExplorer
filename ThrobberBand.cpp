@@ -35,23 +35,6 @@ LRESULT ThrobberBand::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &bHa
 	destinationPoint.x = (clientRect.right - clientRect.left - m_cxCurBmp) / 2;
 	destinationPoint.y = (clientRect.bottom - clientRect.top - m_cyCurBmp) / 2;
 
-	/*static COLORREF background = RGB(255, 0, 0);
-	if(background == RGB(255, 0, 0))
-	{
-		switch (g_theme)
-		{
-		case CLASSIC_EXPLORER_10:
-		case CLASSIC_EXPLORER_XP:
-			background = RGB(255, 255, 255);
-			break;
-		case CLASSIC_EXPLORER_2K:
-			background = RGB(0, 0, 0);
-			break;
-		default:
-			background = RGB(255, 0, 0);
-			break;
-		}
-	}*/
 	COLORREF background = m_theme == CLASSIC_EXPLORER_2K ? RGB(0, 0, 0) : RGB(255, 255, 255);
 
 	SetBkColor(dc, background);
