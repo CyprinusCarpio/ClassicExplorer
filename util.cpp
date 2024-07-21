@@ -12,6 +12,7 @@ namespace CEUtil
 	{
 		DWORD showGoButton = 1;
 		DWORD showAddressLabel = 1;
+		DWORD showFullAddress = 1;
 		ClassicExplorerTheme theme = CLASSIC_EXPLORER_2K;
 		HKEY hKey;
 		LSTATUS ls = RegOpenKeyExW(HKEY_CURRENT_USER, L"SOFTWARE\\ClassicExplorer\\AddressAndThrobber", 0, KEY_READ, &hKey);
@@ -20,7 +21,7 @@ namespace CEUtil
 			// Key doesn't exist, make it
 			ls = RegCreateKeyW(HKEY_CURRENT_USER, L"SOFTWARE\\ClassicExplorer\\AddressAndThrobber", &hKey);
 			if (ls != ERROR_SUCCESS) // sum ting wong
-				return CESettings(CLASSIC_EXPLORER_NONE, -1, -1);
+				return CESettings(CLASSIC_EXPLORER_NONE, -1, -1, -1);
 
 			// Open the new key with write access
 			RegOpenKeyExW(HKEY_CURRENT_USER, L"SOFTWARE\\ClassicExplorer\\AddressAndThrobber", 0, KEY_WRITE, &hKey);
@@ -30,7 +31,8 @@ namespace CEUtil
 			RegSetValueExW(hKey, L"Theme", 0, REG_SZ, (BYTE*)themeDef, 4);
 			RegSetValueExW(hKey, L"ShowGoButton", 0, REG_DWORD, (BYTE*)&showGoButton, 4);
 			RegSetValueExW(hKey, L"ShowAddressLabel", 0, REG_DWORD, (BYTE*)&showAddressLabel, 4);
-			return CESettings(CLASSIC_EXPLORER_2K, 1, 1);
+			RegSetValueExW(hKey, L"ShowFullAddress", 0, REG_DWORD, (BYTE*)&showFullAddress, 4);
+			return CESettings(CLASSIC_EXPLORER_2K, 1, 1, 1);
 		}
 		// Read settings
 		WCHAR themeRead[8];
@@ -48,10 +50,11 @@ namespace CEUtil
 		DWORD dwValueSize = sizeof(DWORD);
 		RegGetValueW(hKey, NULL, L"ShowGoButton", RRF_RT_REG_DWORD, NULL, &showGoButton, &dwValueSize);
 		RegGetValueW(hKey, NULL, L"ShowAddressLabel", RRF_RT_REG_DWORD, NULL, &showAddressLabel, &dwValueSize);
+		RegGetValueW(hKey, NULL, L"ShowFullAddress", RRF_RT_REG_DWORD, NULL, &showFullAddress, &dwValueSize);
 
 		RegCloseKey(hKey);
 
-		return CESettings(theme, showGoButton, showAddressLabel);
+		return CESettings(theme, showGoButton, showAddressLabel, showFullAddress);
 	}
 
 	void WriteCESettings(CESettings& toWrite)
@@ -84,6 +87,10 @@ namespace CEUtil
 		if (toWrite.showAddressLabel != -1)
 		{
 			RegSetValueExW(hKey, L"ShowAddressLabel", 0, REG_DWORD, (BYTE*)&toWrite.showAddressLabel, 4);
+		}
+		if (toWrite.showFullAddress != -1)
+		{
+			RegSetValueExW(hKey, L"ShowFullAddress", 0, REG_DWORD, (BYTE*)&toWrite.showFullAddress, 4);
 		}
 		RegCloseKey(hKey);
 	}
